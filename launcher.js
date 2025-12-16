@@ -67,7 +67,7 @@ export default async function Launcher() {
     )
     .prompt(`"${listName}: "`).marker("''").pointer("''").highlightLine()
     .bind(
-      "'enter:execute(`echo {} | head -n 3 | tail -n 1` > /dev/null 2>&1 &)+abort'",
+      "'enter:execute(`echo {} | head -n 3 | tail -n 1` &)+abort'",
     )
     .headerFirst().bind(
       `"${USER_ARGUMENTS.modKey}-space:become(jiffy -m a -r)"`,

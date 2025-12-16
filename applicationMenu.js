@@ -187,7 +187,13 @@ function extractDesktopEntryData(fileDescriptor) {
  * @returns {string} Executable name
  */
 function parseExecField(execValue) {
-  return execValue.split("/").pop().split(" ")[0];
+  const tokens = execValue.match(/("[^"]+"|\S+)/g) || [];
+
+  return tokens
+    .filter((token) => {
+      return !/^%[a-zA-Z]/.test(token);
+    })
+    .join(" ");
 }
 
 /**
