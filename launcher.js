@@ -3,6 +3,7 @@ import { ProcessSync } from "../qjs-ext-lib/src/process.js";
 import { getAppMenu } from "./applicationMenu.js";
 import Fzf from "../justjs/fzf.js";
 import { getWindowSize, handleFzfExec, setCommonFzfArgs } from "./utils.js";
+import { getpid } from 'os'
 
 /**
  * @param {Array} list - The list of options to present to the user for selection.
@@ -51,6 +52,8 @@ export default async function Launcher() {
       option.name.length > length ? option.name.length : length,
     0,
   );
+  
+  const pid = getpid();
 
   const fzfArgs = new Fzf().ansi().header("''").read0().delimiter("'#'")
     .withNth(-1).info("right").padding(padding)
@@ -67,7 +70,7 @@ export default async function Launcher() {
     )
     .prompt(`"${listName}: "`).marker("''").pointer("''").highlightLine()
     .bind(
-      "'enter:execute(`echo {} | head -n 3 | tail -n 1` &)+abort'",
+      `'enter:execute(\`echo {} | head -n 3 | tail -n 1\` >> /tmp/jiffy-${pid} 2>&1 & touch /tmp/jiffy-${pid}&& tail -f /tmp/jiffy-${pid})+abort'`,
     )
     .headerFirst().bind(
       `"${USER_ARGUMENTS.modKey}-space:become(jiffy -m a -r)"`,
